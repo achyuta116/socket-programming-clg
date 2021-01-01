@@ -35,6 +35,8 @@ def process_auth_response(res):
         return 0
     elif (res_code == "MSET"):
         print('Meeting set successfully')
+    elif (res_code == 'CUR'):
+        pass
         
 
 # need to implement
@@ -51,11 +53,40 @@ def send_to_server(send_message):
         next_action = process_auth_response(res)
     return next_action
 
-def check_notifs(user_data):
+def check_notifs(user_data, username):
 
     while True:
-        print(user_data.state)
+        data = user_data.state
         
+        if user_data.state["curr_notif"]:
+            index = 0
+            length = len(user_data.state["curr_notif"])
+            while index < length:
+                notif = data["curr_notif"][index]
+                print("Reminder is set on: ", notif['date'])
+                print('Reminder is set at: ', notif['time'])
+                print('Reminder details: ', notif['agenda'])
+                user_data.state["curr_notif"].pop(index)
+                index+=1
+                length-=1
+        else:
+            for usn in data:
+                # print(type(usn),usn)
+                now = datetime.now()
+                now_date = now.strftime("%Y-%m-%d")
+                now_time = now.strftime("%H:%M")
+                set_notif = user_data.state["set_notif"]
+                index = 0
+                length = len(user_data.state["set_notif"])
+                while index < length:
+                    notif = user_data.state["set_notif"][index]
+                    if notif["date"] <= now_date:
+                        if notif["time"] <= now_time:
+                            user_data.state["curr_notif"].append(notif)
+                            user_data.state["set_notif"].pop(index)
+                    index+=1
+                    length-=1   
+        send_to_server("UPD^" + username + f"|")
         time.sleep(1)
 
 
@@ -65,7 +96,7 @@ def user_menu(res, username):
     copy = User_data()
     user_data.state = json.loads(res_supplement)
     print(user_data.state)
-    check_for_notifs = threading.Thread(target=check_notifs, args=(copy,))
+    check_for_notifs = threading.Thread(target=check_notifs, args=(copy,username))
     check_for_notifs.start()
     while(True):
         print('--USER MENU--')

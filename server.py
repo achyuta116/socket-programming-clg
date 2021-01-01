@@ -31,7 +31,7 @@ def process_data(command):
             else: res = 'EXS;'
         elif(operation == 'UPD'):
             (username, details) = supplement.split('|')
-            res = "MSET;"
+            res = "CUR;"
             if username in data:
                 data[username]['curr_notif'] = []
                 res += json.dumps(data[username])
