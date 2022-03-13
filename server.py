@@ -29,7 +29,7 @@ def process_data(command):
                 }
                 with open('data.json', 'w') as outfile:
                     json.dump(data, outfile)
-                res = 'REG;'
+                res = 'REG;' + json.dumps(data[username])
             else: res = 'EXS;'
     return res
 
