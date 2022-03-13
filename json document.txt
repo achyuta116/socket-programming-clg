@@ -9,14 +9,14 @@ key: time
 value: subject
 
 functions
-clear notifs set current notifs to zero - client to server and update on client
-print current notifs - client
-print set notifs - client
-add set notif - client to server and add to client
-sign up new user - add a user doucment to the entire json doc
-authenticate user and send back user document
-
-async loop to update state of notif - server side
+ - clear notifs set current notifs to zero - client to server and update on client
+ - print current notifs - client
+ - print set notifs - client
+ - add set notif - client to server and add to client
+ - add meeting notif - client mentions usernames and notif is set for all those usernames
+~done~ sign up new user - add a user doucment to the entire json doc
+~done~ authenticate user and send back user document
+ - async loop to update state of notif - server side
 
 message format:- COMMAND^supplement text i.e delimiter ^
 
