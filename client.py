@@ -6,7 +6,7 @@ import json
 HOST = "127.0.0.1"  # The server's hostname or IP address
 PORT = 65432  # The port used by the server
 
-def process_response(res):
+def process_auth_response(res):
     res_code, res_supplement = res.split(';')
     if(res_code == 'REG'):
         print('User successfully registered.')
@@ -25,20 +25,25 @@ def process_response(res):
         print('User does not exist')
         return 0
 
+# need to implement
+def process_data_response(res):
+    pass
+
 def user_menu(res):
     res_code, res_supplement = res.split(';')
     user_data = json.loads(res_supplement)
     print('--USER MENU--')
     #fill out usermenu
     #make the usermenu loop with socket connections as well
+    #need to implement socket connection and send data to server properly
+    #and handle data in the function on the server i.e process_data function in server.py
     print(user_data)
     # with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     #     s.connect((HOST, PORT))
-    #     auth_supplement = bytes(username, 'utf-8')+bytes(';', 'utf-8')+bytes(password, 'utf-8')
-    #     s.sendall((b'SIG^'if choice == 1 else b'LOG^') + auth_supplement)
+    #     s.sendall(b'insert data here')
     #     data = s.recv(1024)
     #     res = data.decode('utf-8')
-    #     next_action = process_response(res)
+    #     next_action = process_data_response(res)
     #     print(f"Received {data!r}")
 
 while(True):
@@ -57,7 +62,7 @@ while(True):
             s.sendall((b'SIG^'if choice == 1 else b'LOG^') + auth_supplement)
             data = s.recv(1024)
             res = data.decode('utf-8')
-            next_action = process_response(res)
+            next_action = process_auth_response(res)
             print(f"Received {data!r}") #recieve either user doc or incorrect auth
         if(next_action == 1):
             user_menu(res) #display usermenu make connection and use commands on server
