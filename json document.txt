@@ -1,0 +1,38 @@
+json document
+user:
+ - password
+ - current notifs []
+ - set notifs []
+
+notif - key: value
+key: time
+value: subject
+
+functions
+clear notifs set current notifs to zero - client to server and update on client
+print current notifs - client
+print set notifs - client
+add set notif - client to server and add to client
+sign up new user - add a user doucment to the entire json doc
+authenticate user and send back user document
+
+async loop to update state of notif - server side
+
+message format:- COMMAND^supplement text i.e delimiter ^
+
+
+
+Commands:
+LOG - Login Supplemented with username:password
+SIG - Signup Supplemented with username:password
+
+Responses:
+REG - User registered into document
+EXS - Username already taken
+
+EXI - User registered and authenticated Supplemented with json data string associated with user
+INP - User registered but incorrect password entered
+NEX - User with entered username does not exist
+
+Need to process responses on client side
+Once user is logged in, need to give client new options for interacting with data and updating it
