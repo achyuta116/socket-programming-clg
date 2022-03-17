@@ -25,6 +25,7 @@ message format:- COMMAND^supplement text i.e delimiter ^
 Commands:
 LOG - Login Supplemented with username:password
 SIG - Signup Supplemented with username:password
+UPD - Updates data of user supplemented with user data
 
 Responses:
 REG - User registered into document

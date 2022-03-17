@@ -28,6 +28,11 @@ def process_data(command):
                     json.dump(data, outfile)
                 res = 'REG;' + json.dumps(data[username])
             else: res = 'EXS;'
+        elif(operation == 'UPD'):
+            (username, details) = supplement.split('|')
+            data[username] = details
+            with open('data.json', 'w') as outfile:
+                    json.dump(data, outfile)
     return res
 
 
