@@ -26,6 +26,7 @@ Commands:
 LOG - Login Supplemented with username:password
 SIG - Signup Supplemented with username:password
 UPD - Updates data of user supplemented with user data
+MEET - Set up a meeting supplemented with usernames
 
 Responses:
 REG - User registered into document

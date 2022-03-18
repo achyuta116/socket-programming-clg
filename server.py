@@ -33,6 +33,11 @@ def process_data(command):
             data[username] = details
             with open('data.json', 'w') as outfile:
                     json.dump(data, outfile)
+        elif(operation == "MEET"):
+            usernames = supplement.split(";")
+            for usn in usernames:
+                if usn in data:
+                    res = "MEET;" + json.dumps(data[usn])
     return res
 
 
