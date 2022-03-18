@@ -63,7 +63,11 @@ def user_menu(res, username):
             if choice == 6: break
             data = ''
             if choice == 1:
-                pass
+                if user_data['curr_notif'] == []:
+                    print('No Current Notifications')
+                for (time,detail) in user_data['curr_notif']:
+                    print('Scheduled time:',time)
+                    print('Details:',detail)
             elif choice == 2:
                 pass
             elif choice == 3:
@@ -71,7 +75,7 @@ def user_menu(res, username):
             elif choice == 4:
                 pass
             elif choice == 5:
-                pass
+                pass 
             continue
 
 while(True):
