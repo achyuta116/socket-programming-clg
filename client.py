@@ -33,7 +33,9 @@ def process_data_response(res):
 def send_to_server(send_message):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((HOST, PORT))
-        s.sendall(bytes(send_message), 'utf-8')
+        # s.sendall(bytes(send_message), 'utf-8')
+        send_message = bytes(send_message,'utf-8')
+        s.sendall(send_message)
         data = s.recv(1024)
         res = data.decode('utf-8')
         next_action = process_data_response(res)
@@ -69,7 +71,17 @@ def user_menu(res, username):
             elif choice == 3:
                 pass
             elif choice == 4:
-                pass
+                print("Enter the invitees username")
+                usernames = []
+                while(True):
+                    usn = input()
+                    usernames.append(usn)
+                    choice = input("Do you want to enter another username?(y/n)")
+                    if(choice == 'n'):
+                        break
+                print(usernames)
+                usernames = "MEET^" + ";".join(usernames)
+                send_to_server(usernames)
             elif choice == 5:
                 pass
             continue
