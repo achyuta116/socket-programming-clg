@@ -4,12 +4,10 @@ user:
  - current notifs []
  - set notifs []
 
-notif - key: value
-key: time
-value: subject
+notif - (time, details)
 
 functions
- - ~bgs~clear notifs set current notifs to zero - client to server and update on client
+ - ~bgs~clear current notifs and set to zero - client to server and update on client
  - ~bgs~print current notifs - client
  - ~achyuta~print set notifs - client
  - ~achyuta~add set notif - client to server and add to client
