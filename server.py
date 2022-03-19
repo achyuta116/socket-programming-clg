@@ -34,10 +34,21 @@ def process_data(command):
             with open('data.json', 'w') as outfile:
                     json.dump(data, outfile)
         elif(operation == "MEET"):
-            usernames = supplement.split(";")
+            usernames,datetime = supplement.split("&")
+            usernames = usernames.split(";")
+            date,time,agenda = datetime.split()
+            res = "MSET;"
             for usn in usernames:
                 if usn in data:
-                    res = "MEET;" + json.dumps(data[usn])
+                    meet = {}
+                    meet["date"] = date
+                    meet["time"] = time
+                    meet["agenda"] = agenda
+                    data[usn]["set_notif"].append(meet)
+                    res += json.dumps(data[usn])
+            with open('data.json', 'w') as outfile:
+                json.dump(data, outfile)
+            
     return res
 
 

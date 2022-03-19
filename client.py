@@ -25,6 +25,9 @@ def process_auth_response(res):
     elif(res_code == 'NEX'):
         print('User does not exist')
         return 0
+    elif (res_code == "MSET"):
+        print('User Data:', res_supplement)
+        
 
 # need to implement
 def process_data_response(res):
@@ -38,8 +41,10 @@ def send_to_server(send_message):
         s.sendall(send_message)
         data = s.recv(1024)
         res = data.decode('utf-8')
-        next_action = process_data_response(res)
+        next_action = process_auth_response(res)
         print(f"Received {data!r}")
+    return next_action
+
 
 def user_menu(res, username):
     res_code, res_supplement = res.split(';')
@@ -83,8 +88,12 @@ def user_menu(res, username):
                     choice = input("Do you want to enter another username?(y/n)")
                     if(choice == 'n'):
                         break
-                print(usernames)
-                usernames = "MEET^" + ";".join(usernames)
+                usernames.append(username)
+                date = input("Enter the date in YYYY-MM-DD format: ")
+                time = input("Enter the time of meeting [24 hour format]: ")
+                agenda = input("Enter the agendaof the meeting: ")
+                # print(usernames)
+                usernames = "MEET^" + ";".join(usernames) + f"&{date} {time} {agenda}"
                 send_to_server(usernames)
             elif choice == 5:
                 pass 

@@ -1,12 +1,24 @@
 {
     "Ak": {
         "password": "Ak",
-        "set_notif": [],
+        "set_notif": [
+            {
+                "date": "2022-03-19",
+                "time": "19:30",
+                "agenda": "General"
+            }
+        ],
         "curr_notif": []
     },
     "Amogh": {
         "password": "K",
-        "set_notif": [],
+        "set_notif": [
+            {
+                "date": "2022-03-19",
+                "time": "19:30",
+                "agenda": "General"
+            }
+        ],
         "curr_notif": []
     }
 }
