@@ -1,8 +1,7 @@
 import socket
 import json
-
-HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
-PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
+import threading
+import multiprocessing
 
 def process_data(command):
     res = ''
@@ -51,20 +50,32 @@ def process_data(command):
             
     return res
 
-
-
-
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    s.bind((HOST, PORT))
-    s.listen()
-    while True:
-        conn, addr = s.accept()
-        with conn:
-            print(f"Connected by {addr}")
-            while True:
-                data = conn.recv(1024)
-                #process data recieved
-                if not data:
-                    break
-                response = process_data(data.decode('utf-8'))
-                conn.sendall(bytes(response, 'utf-8'))
+def handle_client(conn,addr):
+    format = "utf-8"
+    size = 1024
+    print(f"[NEW CONNECTION] {addr}")
+    with conn:
+        while True:
+            data = conn.recv(size)
+            if not data:
+                break
+            response = process_data(data.decode(format))
+            conn.sendall(bytes(response, format))
+    conn.close()
+    return
+tot_process = []
+def main():
+    HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
+    PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind((HOST, PORT))
+        s.listen()
+        ip = socket.gethostbyname(socket.gethostname())
+        print("Server Listening on:",ip)
+        while True:
+            conn, addr = s.accept()
+            process = multiprocessing.Process(target = handle_client,args = (conn,addr))
+            process.start()
+            # print(f"Currently Listening to {threading.active_count() - 1} connections")
+if __name__ == "__main__":
+    main()

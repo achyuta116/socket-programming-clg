@@ -106,7 +106,12 @@ def user_menu(res, username):
                 usernames = "MEET^" + ";".join(usernames) + f"&{date} {time} {agenda}"
                 send_to_server(usernames)
             elif choice == 5:
-                pass 
+                if user_data['curr_notif'] == []:
+                    print('Successfully Reset Current Notifications')
+                new_notif = []
+                user_data['curr_notif'] = new_notif
+                send_to_server(new_notif)
+
             continue
 
 while(True):

@@ -11,8 +11,8 @@ notif - {
 }
 
 functions
- - ~bgs~clear current notifs and set to zero - client to server and update on client
- - ~bgs~print current notifs - client
+ -~done t~ ~bgs~clear current notifs and set to zero - client to server and update on client
+ -~done~ ~bgs~print current notifs - client
 ~done~ - ~achyuta~print set notifs - client
 ~done~ - ~achyuta~add set notif - client to server and add to client
  - ~amogh~add meeting notif - client mentions usernames and notif is set for all those usernames
