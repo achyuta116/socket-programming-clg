@@ -74,9 +74,13 @@ def user_menu(res, username):
             if choice == 1:
                 if user_data['curr_notif'] == []:
                     print('No Current Notifications')
-                for (time,detail) in user_data['curr_notif']:
-                    print('Scheduled time:',time)
-                    print('Details:',detail)
+                else:
+                    cur_notif = user_data['curr_notif']
+                    print(cur_notif)
+                    for notif in cur_notif:
+                        print('Scheduled date:',notif["date"])
+                        print('Scheduled time:',notif["time"])
+                        print('Details:',notif["agenda"])
             elif choice == 2:
                 if user_data['set_notif'] == []:
                     print('No Set Reminders')

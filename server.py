@@ -1,7 +1,10 @@
 import socket
 import json
+from sqlite3 import Time
 import threading
 import multiprocessing
+from datetime import datetime
+import time
 
 def process_data(command):
     res = ''
@@ -63,7 +66,38 @@ def handle_client(conn,addr):
             conn.sendall(bytes(response, format))
     conn.close()
     return
+
+def update_data(name):
+    while True:
+        now = datetime.now()
+        now_date = now.strftime("%Y-%m-%d")
+        now_time = now.strftime("%H:%M")
+        # print(f"now: {date} {time}")
+        with open('data.json') as json_file:
+            data = json.load(json_file)
+            # print(type(data))
+            for usn in data:
+                # print(type(usn),usn)
+                set_notif = data[usn]["set_notif"]
+                for index in range(len(set_notif)):
+                    notif = set_notif[index]
+                    # print(notif["date"]<=now_date)
+                    # print(notif["time"]<=now_time)
+                    if notif["date"] <= now_date:
+                        if notif["time"] <= now_time:
+                            data[usn]["curr_notif"].append(notif)
+                            data[usn]["set_notif"].pop(index)
+                            print("current:",data[usn]["curr_notif"])
+                            print("set:",data[usn]["set_notif"])
+                            # print("updated")
+                            with open('data.json', 'w') as outfile:
+                                json.dump(data, outfile)
+                                # print(f"data:{data}")       
+            
+        time.sleep(1)       
+
 tot_process = []
+
 def main():
     HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
     PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
@@ -73,9 +107,12 @@ def main():
         # ip = socket.gethostbyname(socket.gethostname())
         print("Server Listening on:",HOST)
         while True:
+            data_updation = threading.Thread(target=update_data, args=(1,))
+            data_updation.start()
             conn, addr = s.accept()
             process = multiprocessing.Process(target = handle_client,args = (conn,addr))
             process.start()
+            
             # print(f"Currently Listening to {threading.active_count() - 1} connections")
 if __name__ == "__main__":
     main()
