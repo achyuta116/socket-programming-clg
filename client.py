@@ -69,6 +69,8 @@ def user_menu(res, username):
         else:
             if choice == 6: break
             data = ''
+            # @Sourav, you might want to change the way you're looping through the reminders since Amogh implemented 
+            # a different reminder format using dictionaries, you could refer choice 2 for this
             if choice == 1:
                 if user_data['curr_notif'] == []:
                     print('No Current Notifications')
@@ -76,9 +78,18 @@ def user_menu(res, username):
                     print('Scheduled time:',time)
                     print('Details:',detail)
             elif choice == 2:
-                pass
+                if user_data['set_notif'] == []:
+                    print('No Set Reminders')
+                for reminder in user_data['set_notif']:
+                    print("Reminder is set on: ", reminder['date'])
+                    print('Reminder is set at: ', reminder['time'])
+                    print('Reminder details: ', reminder['agenda'])
             elif choice == 3:
-                pass
+                date = input("Enter the date in YYYY-MM-DD format: ")
+                time = input("Enter the time of reminder [24 hour format]: ")
+                agenda = input("Enter the details of the reminder: ")
+                message = "MEET^" + username + f"&{date} {time} {agenda}"
+                send_to_server(message)
             elif choice == 4:
                 print("Enter the invitees username")
                 usernames = []
@@ -91,8 +102,7 @@ def user_menu(res, username):
                 usernames.append(username)
                 date = input("Enter the date in YYYY-MM-DD format: ")
                 time = input("Enter the time of meeting [24 hour format]: ")
-                agenda = input("Enter the agendaof the meeting: ")
-                # print(usernames)
+                agenda = input("Enter the agenda of the meeting: ")
                 usernames = "MEET^" + ";".join(usernames) + f"&{date} {time} {agenda}"
                 send_to_server(usernames)
             elif choice == 5:

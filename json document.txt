@@ -4,7 +4,11 @@ user:
  - current notifs []
  - set notifs []
 
-notif - (time, details)
+notif - {
+    time:
+    date:
+    agenda:
+}
 
 functions
  - ~bgs~clear current notifs and set to zero - client to server and update on client
