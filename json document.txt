@@ -13,8 +13,8 @@ notif - {
 functions
  - ~bgs~clear current notifs and set to zero - client to server and update on client
  - ~bgs~print current notifs - client
- - ~achyuta~print set notifs - client
- - ~achyuta~add set notif - client to server and add to client
+~done~ - ~achyuta~print set notifs - client
+~done~ - ~achyuta~add set notif - client to server and add to client
  - ~amogh~add meeting notif - client mentions usernames and notif is set for all those usernames
 ~done~ sign up new user - add a user doucment to the entire json doc
 ~done~ authenticate user and send back user document
