@@ -70,8 +70,8 @@ def main():
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((HOST, PORT))
         s.listen()
-        ip = socket.gethostbyname(socket.gethostname())
-        print("Server Listening on:",ip)
+        # ip = socket.gethostbyname(socket.gethostname())
+        print("Server Listening on:",HOST)
         while True:
             conn, addr = s.accept()
             process = multiprocessing.Process(target = handle_client,args = (conn,addr))
