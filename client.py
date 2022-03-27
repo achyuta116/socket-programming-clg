@@ -6,6 +6,7 @@ import time
 
 HOST = "127.0.0.1"  # The server's hostname or IP address
 PORT = 65432  # The port used by the server
+LOGIN = 0
 
 def process_auth_response(res):
     res_code, res_supplement = res.split(';')
@@ -46,27 +47,30 @@ def send_to_server(send_message):
 def check_notifs(username):
     message = "CNOT^"+username
     while True:
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.connect((HOST, PORT))
-            send_message = bytes(message,'utf-8')
-            s.sendall(send_message)
-            data = s.recv(1024)
-            res = data.decode('utf-8')
-            res_code, res_supplement = res.split('&')
-            if res_code == "CNOTP" and res_supplement:
-                notifs = res_supplement.split(";")
-                for notif in notifs:
-                    notif = notif.replace('\'', '"')
-                    notif_dict = json.loads(notif)
-                    print("Notif date", notif_dict['date'])
-                    print("Notif time", notif_dict['time'])
-                    print("Notif agenda", notif_dict['agenda'])
+        if LOGIN:
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.connect((HOST, PORT))
+                send_message = bytes(message,'utf-8')
+                s.sendall(send_message)
+                data = s.recv(1024)
+                res = data.decode('utf-8')
+                res_code, res_supplement = res.split('&')
+                if res_code == "CNOTP" and res_supplement:
+                    notifs = res_supplement.split(";")
+                    for notif in notifs:
+                        # notif = notif.replace('\'', '"')
+                        # notif_dict = json.loads(notif)
+                        # print("Notif date", notif_dict['date'])
+                        # print("Notif time", notif_dict['time'])
+                        # print("Notif agenda", notif_dict['agenda'])
+                        print(notif)
         time.sleep(1)
 
 
 def user_menu(res, username):
     res_code, res_supplement = res.split(';')
     user_data = json.loads(res_supplement)
+    LOGIN = 1
     check_for_notifs = threading.Thread(target=check_notifs, args=(username,))
     check_for_notifs.start()
     while(True):
@@ -82,7 +86,9 @@ def user_menu(res, username):
             print('Enter valid choice: ')
             continue
         else:
-            if choice == 6: break
+            if choice == 6: 
+                LOGIN = 0
+                break
             if choice == 1:
                 if user_data['curr_notif'] == []:
                     print('--No Current Notifications')
