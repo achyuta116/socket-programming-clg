@@ -1,6 +1,5 @@
 import socket
 import json
-from sqlite3 import Time
 import threading
 import multiprocessing
 from datetime import datetime
@@ -99,8 +98,8 @@ def update_data(name):
 tot_process = []
 
 def main():
-    HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
-    PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
+    HOST = "127.0.0.1"
+    PORT = 65432
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((HOST, PORT))
         s.listen()

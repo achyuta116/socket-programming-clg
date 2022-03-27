@@ -1,5 +1,3 @@
-# echo-client.py
-
 import socket
 import json
 from datetime import datetime
@@ -36,13 +34,11 @@ def process_data_response(res):
 def send_to_server(send_message):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((HOST, PORT))
-        # s.sendall(bytes(send_message), 'utf-8')
         send_message = bytes(send_message,'utf-8')
         s.sendall(send_message)
         data = s.recv(1024)
         res = data.decode('utf-8')
         next_action = process_auth_response(res)
-        print(f"Received {data!r}")
     return next_action
 
 
@@ -51,11 +47,6 @@ def user_menu(res, username):
     user_data = json.loads(res_supplement)
     while(True):
         print('--USER MENU--')
-        #fill out usermenu
-        #make the usermenu loop with socket connections as well
-        #need to implement socket connection and send data to server properly
-        #and handle data in the function on the server i.e process_data function in server.py
-        print(user_data)
         print('1. Print Current Notifs')
         print('2. Print Set Notifs')
         print('3. Add a reminder')
@@ -68,9 +59,6 @@ def user_menu(res, username):
             continue
         else:
             if choice == 6: break
-            data = ''
-            # @Sourav, you might want to change the way you're looping through the reminders since Amogh implemented 
-            # a different reminder format using dictionaries, you could refer choice 2 for this
             if choice == 1:
                 if user_data['curr_notif'] == []:
                     print('No Current Notifications')
@@ -135,9 +123,8 @@ while(True):
             data = s.recv(1024)
             res = data.decode('utf-8')
             next_action = process_auth_response(res)
-            print(f"Received {data!r}") #recieve either user doc or incorrect auth
         if(next_action == 1):
-            user_menu(res, username) #display usermenu make connection and use commands on server
+            user_menu(res, username)
         continue
     elif(choice == 3):
         print('Successfully Exited')
