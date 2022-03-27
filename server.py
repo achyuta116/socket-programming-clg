@@ -31,9 +31,14 @@ def process_data(command):
             else: res = 'EXS;'
         elif(operation == 'UPD'):
             (username, details) = supplement.split('|')
-            data[username] = details
+            res = "MSET;"
+            if username in data:
+                data[username]['curr_notif'] = []
+                res += json.dumps(data[username])
+            # data[username['curr_notif']] = details    
             with open('data.json', 'w') as outfile:
                     json.dump(data, outfile)
+
         elif(operation == "MEET"):
             usernames,datetime = supplement.split("&")
             usernames = usernames.split(";")
@@ -112,6 +117,6 @@ def main():
             process = multiprocessing.Process(target = handle_client,args = (conn,addr))
             process.start()
             
-            # print(f"Currently Listening to {threading.active_count() - 1} connections")
+            print(f"Currently Listening to {threading.active_count() - 1} connections")
 if __name__ == "__main__":
     main()
