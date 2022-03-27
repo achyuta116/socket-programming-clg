@@ -54,7 +54,8 @@ def check_notifs(username):
             res = data.decode('utf-8')
             res_code, res_supplement = res.split('&')
             if res_code == "CNOTP" and res_supplement:
-                notifs = json.loads(res_supplement.split(";"))
+                # notifs = json.loads(res_supplement.split(";"))
+                notifs = res_supplement.split(";")
                 i=1
                 for notif in notifs:
                     # print(f"{i}.)")
@@ -65,7 +66,7 @@ def check_notifs(username):
                     # print(f"--Scheduled time:{temp2}")
                     # print(f"--Details of the remainder:{temp3}")
                     # i = i + 1
-                    print(notif)
+                    print("\n",notif)
 
         time.sleep(1)
 
