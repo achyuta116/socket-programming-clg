@@ -7,6 +7,7 @@ import time
 HOST = "127.0.0.1"  # The server's hostname or IP address
 PORT = 65432  # The port used by the server
 LOGIN = 0
+EXIT = 0
 
 def process_auth_response(res):
     res_code, res_supplement = res.split(';')
@@ -46,7 +47,7 @@ def send_to_server(send_message):
 
 def check_notifs(username):
     message = "CNOT^"+username
-    while True:
+    while True and not EXIT:
         if LOGIN:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 s.connect((HOST, PORT))
@@ -170,6 +171,7 @@ while(True):
             user_menu(res, username)
         continue
     elif(choice == 3):
+        EXIT = 1
         print('Successfully Exited')
         break
     else: 
