@@ -1,6 +1,8 @@
 import socket
 import json
 from datetime import datetime
+import threading
+import time
 
 HOST = "127.0.0.1"  # The server's hostname or IP address
 PORT = 65432  # The port used by the server
@@ -41,10 +43,38 @@ def send_to_server(send_message):
         next_action = process_auth_response(res)
     return next_action
 
+def check_notifs(username):
+    message = "CNOT^"+username
+    while True:
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.connect((HOST, PORT))
+            send_message = bytes(message,'utf-8')
+            s.sendall(send_message)
+            data = s.recv(1024)
+            res = data.decode('utf-8')
+            res_code, res_supplement = res.split('&')
+            if res_code == "CNOTP" and res_supplement:
+                notifs = json.loads(res_supplement.split(";"))
+                i=1
+                for notif in notifs:
+                    # print(f"{i}.)")
+                    # temp1 = notif['date']
+                    # temp2 = notif['time']
+                    # temp3 = notif['agenda']
+                    # print(f"--Scheduled date: {temp1}")
+                    # print(f"--Scheduled time:{temp2}")
+                    # print(f"--Details of the remainder:{temp3}")
+                    # i = i + 1
+                    print(notif)
+
+        time.sleep(1)
+
 
 def user_menu(res, username):
     res_code, res_supplement = res.split(';')
     user_data = json.loads(res_supplement)
+    check_for_notifs = threading.Thread(target=check_notifs, args=(username,))
+    check_for_notifs.start()
     while(True):
         print('--USER MENU--')
         print('1. Print Current Notifs')
@@ -88,7 +118,7 @@ def user_menu(res, username):
                 date = input("Enter the date in YYYY-MM-DD format: ")
                 time = input("Enter the time of reminder [24 hour format]: ")
                 agenda = input("Enter the details of the reminder: ")
-                message = "MEET^" + username + f"&{date} {time} {agenda}"
+                message = "MEET^" + username + f"&{date}${time}${agenda}"
                 send_to_server(message)
             elif choice == 4:
                 print("Enter the invitees username")

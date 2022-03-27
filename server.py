@@ -42,7 +42,7 @@ def process_data(command):
         elif(operation == "MEET"):
             usernames,datetime = supplement.split("&")
             usernames = usernames.split(";")
-            date,time,agenda = datetime.split()
+            date,time,agenda = datetime.split('$')
             res = "MSET;"
             for usn in usernames:
                 if usn in data:
@@ -54,7 +54,22 @@ def process_data(command):
                     res += json.dumps(data[usn])
             with open('data.json', 'w') as outfile:
                 json.dump(data, outfile)
-            
+        elif(operation == "CNOT"):
+            usn = supplement
+            res = "CNOTP&"
+            cur_notif = data[usn]["curr_notif"]
+            i = 0
+            length = len(cur_notif)
+            while i < length:
+                res += f"{cur_notif[i]};"
+                data[usn]["curr_notif"].pop(i)
+                length -= 1
+            # for i in range(len(cur_notif)):
+            #     res += f"{cur_notif[i]};"
+            #     data[usn]["curr_notif"].pop(i)
+            with open('data.json', 'w') as outfile:
+                json.dump(data, outfile)
+
     return res
 
 def handle_client(conn,addr):
@@ -91,8 +106,8 @@ def update_data(name):
                         if notif["time"] <= now_time:
                             data[usn]["curr_notif"].append(notif)
                             data[usn]["set_notif"].pop(index)
-                            print("current:",data[usn]["curr_notif"])
-                            print("set:",data[usn]["set_notif"])
+                            # print("current:",data[usn]["curr_notif"])
+                            # print("set:",data[usn]["set_notif"])
                             # print("updated")
                             with open('data.json', 'w') as outfile:
                                 json.dump(data, outfile)
