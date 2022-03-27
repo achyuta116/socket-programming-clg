@@ -54,20 +54,13 @@ def check_notifs(username):
             res = data.decode('utf-8')
             res_code, res_supplement = res.split('&')
             if res_code == "CNOTP" and res_supplement:
-                # notifs = json.loads(res_supplement.split(";"))
                 notifs = res_supplement.split(";")
-                i=1
                 for notif in notifs:
-                    # print(f"{i}.)")
-                    # temp1 = notif['date']
-                    # temp2 = notif['time']
-                    # temp3 = notif['agenda']
-                    # print(f"--Scheduled date: {temp1}")
-                    # print(f"--Scheduled time:{temp2}")
-                    # print(f"--Details of the remainder:{temp3}")
-                    # i = i + 1
-                    print("\n",notif)
-
+                    notif = notif.replace('\'', '"')
+                    notif_dict = json.loads(notif)
+                    print("Notif date", notif_dict['date'])
+                    print("Notif time", notif_dict['time'])
+                    print("Notif agenda", notif_dict['agenda'])
         time.sleep(1)
 
 
@@ -139,7 +132,7 @@ def user_menu(res, username):
                 date = input("Enter the date in YYYY-MM-DD format: ")
                 time = input("Enter the time of meeting [24 hour format]: ")
                 agenda = input("Enter the agenda of the meeting: ")
-                usernames = "MEET^" + ";".join(usernames) + f"&{date} {time} {agenda}"
+                usernames = "MEET^" + ";".join(usernames) + f"&{date}${time}${agenda}"
                 send_to_server(usernames)
             elif choice == 5:
                 if user_data['curr_notif'] == []:
