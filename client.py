@@ -80,6 +80,11 @@ def user_menu(res, username):
                 date = input("Enter the date in YYYY-MM-DD format: ")
                 time = input("Enter the time of reminder [24 hour format]: ")
                 agenda = input("Enter the details of the reminder: ")
+                user_data['set_notif'].append({
+                    'date': date,
+                    'time': time,
+                    'agenda': agenda
+                })
                 message = "MEET^" + username + f"&{date} {time} {agenda}"
                 send_to_server(message)
             elif choice == 4:
