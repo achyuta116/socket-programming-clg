@@ -61,14 +61,22 @@ def user_menu(res, username):
             if choice == 6: break
             if choice == 1:
                 if user_data['curr_notif'] == []:
-                    print('No Current Notifications')
+                    print('--No Current Notifications')
                 else:
                     cur_notif = user_data['curr_notif']
-                    print(cur_notif)
+                    print(f"The total Notifications currently set are {len(cur_notif)}")
+                    print(f"Detailed Notifications:")
+                    i = 1;
                     for notif in cur_notif:
-                        print('Scheduled date:',notif["date"])
-                        print('Scheduled time:',notif["time"])
-                        print('Details:',notif["agenda"])
+                        print(f"{i}.)")
+                        temp1 = notif['date']
+                        temp2 = notif['time']
+                        temp3 = notif['agenda']
+                        print(f"--Scheduled date: {temp1}")
+                        print(f"--Scheduled time:{temp2}")
+                        print(f"--Details of the remainder:{temp3}")
+                        i = i + 1
+
             elif choice == 2:
                 if user_data['set_notif'] == []:
                     print('No Set Reminders')
@@ -105,9 +113,9 @@ def user_menu(res, username):
             elif choice == 5:
                 if user_data['curr_notif'] == []:
                     print('Successfully Reset Current Notifications')
-                new_notif = []
-                user_data['curr_notif'] = new_notif
-                send_to_server(new_notif)
+                message = "UPD^" + username + f"|"
+                user_data['curr_notif'] = []
+                send_to_server(message)
 
             continue
 
