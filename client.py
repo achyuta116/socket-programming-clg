@@ -19,7 +19,8 @@ def process_auth_response(res):
         return 0
     elif(res_code == 'EXI'):
         print('User logged in.')
-        print('User Data:', res_supplement)
+        print('Make a choice from the user menu.')
+        # print('User Data:', res_supplement)
         return 1
     elif(res_code == 'INP'):
         print('Incorrect Password entered.')
@@ -29,6 +30,7 @@ def process_auth_response(res):
         return 0
     elif (res_code == "MSET"):
         print('User Data:', res_supplement)
+        pass
         
 
 # need to implement
@@ -58,13 +60,13 @@ def check_notifs(username):
                 res_code, res_supplement = res.split('&')
                 if res_code == "CNOTP" and res_supplement:
                     notifs = res_supplement.split(";")
-                    for notif in notifs:
-                        # notif = notif.replace('\'', '"')
-                        # notif_dict = json.loads(notif)
-                        # print("Notif date", notif_dict['date'])
-                        # print("Notif time", notif_dict['time'])
-                        # print("Notif agenda", notif_dict['agenda'])
-                        print(notif)
+                    # for notif in notifs:
+                    #     # notif = notif.replace('\'', '"')
+                    #     # notif_dict = json.loads(notif)
+                    #     # print("Notif date", notif_dict['date'])
+                    #     # print("Notif time", notif_dict['time'])
+                    #     # print("Notif agenda", notif_dict['agenda'])
+                    #     # print(notif)
         time.sleep(1)
 
 
@@ -86,7 +88,7 @@ def user_menu(res, username):
         if(choice > 6 or choice < 1):
             print('Enter valid choice: ')
             continue
-        else:
+        elif (choice < 7 and choice > 0):
             if choice == 6: 
                 LOGIN = 0
                 break
