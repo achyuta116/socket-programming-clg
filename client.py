@@ -9,6 +9,13 @@ PORT = 65432  # The port used by the server
 LOGIN = 0
 EXIT = 0
 
+class User_data:
+    __shared_state = dict()
+
+    def __init__(self):
+        self.__dict__ = self.__shared_state
+        self.state = {}
+
 def process_auth_response(res):
     res_code, res_supplement = res.split(';')
     if(res_code == 'REG'):
@@ -19,7 +26,6 @@ def process_auth_response(res):
         return 0
     elif(res_code == 'EXI'):
         print('User logged in.')
-        print('User Data:', res_supplement)
         return 1
     elif(res_code == 'INP'):
         print('Incorrect Password entered.')
@@ -28,7 +34,7 @@ def process_auth_response(res):
         print('User does not exist')
         return 0
     elif (res_code == "MSET"):
-        print('User Data:', res_supplement)
+        print('Meeting set successfully')
         
 
 # need to implement
@@ -45,34 +51,21 @@ def send_to_server(send_message):
         next_action = process_auth_response(res)
     return next_action
 
-def check_notifs(username):
-    message = "CNOT^"+username
-    while True and not EXIT:
-        if LOGIN:
-            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                s.connect((HOST, PORT))
-                send_message = bytes(message,'utf-8')
-                s.sendall(send_message)
-                data = s.recv(1024)
-                res = data.decode('utf-8')
-                res_code, res_supplement = res.split('&')
-                if res_code == "CNOTP" and res_supplement:
-                    notifs = res_supplement.split(";")
-                    for notif in notifs:
-                        # notif = notif.replace('\'', '"')
-                        # notif_dict = json.loads(notif)
-                        # print("Notif date", notif_dict['date'])
-                        # print("Notif time", notif_dict['time'])
-                        # print("Notif agenda", notif_dict['agenda'])
-                        print(notif)
+def check_notifs(user_data):
+
+    while True:
+        print(user_data.state)
+        
         time.sleep(1)
 
 
 def user_menu(res, username):
     res_code, res_supplement = res.split(';')
-    user_data = json.loads(res_supplement)
-    LOGIN = 1
-    check_for_notifs = threading.Thread(target=check_notifs, args=(username,))
+    user_data = User_data()
+    copy = User_data()
+    user_data.state = json.loads(res_supplement)
+    print(user_data.state)
+    check_for_notifs = threading.Thread(target=check_notifs, args=(copy,))
     check_for_notifs.start()
     while(True):
         print('--USER MENU--')
@@ -91,10 +84,10 @@ def user_menu(res, username):
                 LOGIN = 0
                 break
             if choice == 1:
-                if user_data['curr_notif'] == []:
+                if user_data.state['curr_notif'] == []:
                     print('--No Current Notifications')
                 else:
-                    cur_notif = user_data['curr_notif']
+                    cur_notif = user_data.state['curr_notif']
                     print(f"The total Notifications currently set are {len(cur_notif)}")
                     print(f"Detailed Notifications:")
                     i = 1;
@@ -107,11 +100,10 @@ def user_menu(res, username):
                         print(f"--Scheduled time:{temp2}")
                         print(f"--Details of the remainder:{temp3}")
                         i = i + 1
-
             elif choice == 2:
-                if user_data['set_notif'] == []:
+                if user_data.state['set_notif'] == []:
                     print('No Set Reminders')
-                for reminder in user_data['set_notif']:
+                for reminder in user_data.state['set_notif']:
                     print("Reminder is set on: ", reminder['date'])
                     print('Reminder is set at: ', reminder['time'])
                     print('Reminder details: ', reminder['agenda'])
@@ -119,7 +111,7 @@ def user_menu(res, username):
                 date = input("Enter the date in YYYY-MM-DD format: ")
                 time = input("Enter the time of reminder [24 hour format]: ")
                 agenda = input("Enter the details of the reminder: ")
-                user_data['set_notif'].append({
+                user_data.state['set_notif'].append({
                     'date': date,
                     'time': time,
                     'agenda': agenda
@@ -142,10 +134,10 @@ def user_menu(res, username):
                 usernames = "MEET^" + ";".join(usernames) + f"&{date}${time}${agenda}"
                 send_to_server(usernames)
             elif choice == 5:
-                if user_data['curr_notif'] == []:
+                if user_data.state['curr_notif'] == []:
                     print('Successfully Reset Current Notifications')
                 message = "UPD^" + username + f"|"
-                user_data['curr_notif'] = []
+                user_data.state['curr_notif'] = []
                 send_to_server(message)
 
             continue

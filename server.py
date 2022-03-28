@@ -61,7 +61,7 @@ def process_data(command):
             i = 0
             length = len(cur_notif)
             while i < length:
-                res += f"{cur_notif[i]};"
+                res += f'{json.dumps(cur_notif[i])};'
                 data[usn]["curr_notif"].pop(i)
                 length -= 1
             # for i in range(len(cur_notif)):
@@ -126,7 +126,7 @@ def main():
         # ip = socket.gethostbyname(socket.gethostname())
         print("Server Listening on:",HOST)
         while True:
-            data_updation = threading.Thread(target=update_data, args=(1,))
+            data_updation = multiprocessing.Process(target=update_data, args=(1,))
             data_updation.start()
             conn, addr = s.accept()
             process = multiprocessing.Process(target = handle_client,args = (conn,addr))
