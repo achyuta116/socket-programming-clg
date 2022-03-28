@@ -110,7 +110,7 @@ def user_menu(res, username):
         if(choice > 6 or choice < 1):
             print('Enter valid choice: ')
             continue
-        else:
+        elif (choice < 7 and choice > 0):
             if choice == 6: 
                 LOGIN = 0
                 break
