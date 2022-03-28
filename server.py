@@ -113,7 +113,7 @@ def update_data(name):
                                 json.dump(data, outfile)
                                 # print(f"data:{data}")       
             
-        time.sleep(1)       
+        time.sleep(5)       
 
 tot_process = []
 

@@ -6,8 +6,7 @@ import time
 
 HOST = "127.0.0.1"  # The server's hostname or IP address
 PORT = 65432  # The port used by the server
-LOGIN = 0
-EXIT = 0
+
 
 class User_data:
     __shared_state = dict()
@@ -39,10 +38,6 @@ def process_auth_response(res):
         pass
         
 
-# need to implement
-def process_data_response(res):
-    pass
-
 def send_to_server(send_message):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((HOST, PORT))
@@ -63,9 +58,10 @@ def check_notifs(user_data, username):
             length = len(user_data.state["curr_notif"])
             while index < length:
                 notif = data["curr_notif"][index]
-                print("\nReminder is set on: ", notif['date'])
-                print('Reminder is set at: ', notif['time'])
-                print('Reminder details: ', notif['agenda'])
+                print('\n!!Notification!!')
+                print("--Scheduled date: ", notif['date'])
+                print('--Scheduled time: ', notif['time'])
+                print('--Reminder details: ', notif['agenda'])
                 print()
                 user_data.state["curr_notif"].pop(index)
                 index+=1
@@ -88,7 +84,7 @@ def check_notifs(user_data, username):
                     index+=1
                     length-=1   
         send_to_server("UPD^" + username + f"|")
-        time.sleep(1)
+        time.sleep(5)
 
 
 def user_menu(res, username):
@@ -96,24 +92,23 @@ def user_menu(res, username):
     user_data = User_data()
     copy = User_data()
     user_data.state = json.loads(res_supplement)
-    print(user_data.state)
     check_for_notifs = threading.Thread(target=check_notifs, args=(copy,username))
     check_for_notifs.start()
     while(True):
-        print('--USER MENU--')
-        print('1. Print Current Notifs')
-        print('2. Print Set Notifs')
-        print('3. Add a reminder')
-        print('4. Set a meeting reminder')
-        print('5. Clear Current Notifs')
-        print('6. Exit')
-        choice = int(input('Enter your choice: '))
+        print('---------USER MENU----------')
+        print('|1. Print Current Notifs   |')
+        print('|2. Print Set Notifs       |')
+        print('|3. Add a reminder         |')
+        print('|4. Set a meeting reminder |')
+        print('|5. Clear Current Notifs   |')
+        print('|6. Exit                   |')
+        print("----------------------------")
+        choice = int(input('>>Enter your choice: '))
         if(choice > 6 or choice < 1):
             print('Enter valid choice: ')
             continue
         elif (choice < 7 and choice > 0):
             if choice == 6: 
-                LOGIN = 0
                 break
             if choice == 1:
                 if user_data.state['curr_notif'] == []:
@@ -136,9 +131,10 @@ def user_menu(res, username):
                 if user_data.state['set_notif'] == []:
                     print('No Set Reminders')
                 for reminder in user_data.state['set_notif']:
-                    print("\nReminder is set on: ", reminder['date'])
-                    print('Reminder is set at: ', reminder['time'])
-                    print('Reminder details: ', reminder['agenda'])
+                    
+                    print("--Scheduled date: ", reminder['date'])
+                    print('--Scheduled time: ', reminder['time'])
+                    print('--Details of the remainder: ', reminder['agenda'])
                     print()
             elif choice == 3:
                 date = input("Enter the date in YYYY-MM-DD format: ")
@@ -181,10 +177,11 @@ def user_menu(res, username):
             continue
 
 while(True):
-    print('--MENU--')
-    print('1. Sign Up')
-    print('2. Login')
-    print('3. Exit')
+    print('----MENU----')
+    print('|1. Sign Up|')
+    print('|2. Login  |')
+    print('|3. Exit   |')
+    print('------------')
     choice = int(input('Enter your choice: '))
     if(choice == 1 or choice == 2):
         username = input('Enter your username: ')
