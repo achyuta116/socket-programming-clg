@@ -34,7 +34,7 @@ def process_auth_response(res):
         print('User does not exist')
         return 0
     elif (res_code == "MSET"):
-        print('Meeting set successfully')
+        print('Set successfully')
     elif (res_code == 'CUR'):
         pass
         
