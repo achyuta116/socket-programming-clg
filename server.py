@@ -75,7 +75,7 @@ def process_data(command):
 def handle_client(conn,addr):
     format = "utf-8"
     size = 1024
-    print(f"[NEW CONNECTION] {addr}")
+    # print(f"[NEW CONNECTION] {addr}")
     with conn:
         while True:
             data = conn.recv(size)
@@ -132,6 +132,6 @@ def main():
             process = multiprocessing.Process(target = handle_client,args = (conn,addr))
             process.start()
             
-            print(f"Currently Listening to {threading.active_count() - 1} connections")
+            # print(f"Currently Listening to {threading.active_count() - 1} connections")
 if __name__ == "__main__":
     main()

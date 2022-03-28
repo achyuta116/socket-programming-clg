@@ -63,9 +63,10 @@ def check_notifs(user_data, username):
             length = len(user_data.state["curr_notif"])
             while index < length:
                 notif = data["curr_notif"][index]
-                print("Reminder is set on: ", notif['date'])
+                print("\nReminder is set on: ", notif['date'])
                 print('Reminder is set at: ', notif['time'])
                 print('Reminder details: ', notif['agenda'])
+                print()
                 user_data.state["curr_notif"].pop(index)
                 index+=1
                 length-=1
@@ -135,9 +136,10 @@ def user_menu(res, username):
                 if user_data.state['set_notif'] == []:
                     print('No Set Reminders')
                 for reminder in user_data.state['set_notif']:
-                    print("Reminder is set on: ", reminder['date'])
+                    print("\nReminder is set on: ", reminder['date'])
                     print('Reminder is set at: ', reminder['time'])
                     print('Reminder details: ', reminder['agenda'])
+                    print()
             elif choice == 3:
                 date = input("Enter the date in YYYY-MM-DD format: ")
                 time = input("Enter the time of reminder [24 hour format]: ")
@@ -162,6 +164,11 @@ def user_menu(res, username):
                 date = input("Enter the date in YYYY-MM-DD format: ")
                 time = input("Enter the time of meeting [24 hour format]: ")
                 agenda = input("Enter the agenda of the meeting: ")
+                user_data.state['set_notif'].append({
+                    'date': date,
+                    'time': time,
+                    'agenda': agenda
+                })
                 usernames = "MEET^" + ";".join(usernames) + f"&{date}${time}${agenda}"
                 send_to_server(usernames)
             elif choice == 5:
